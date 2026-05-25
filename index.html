@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drop Shot Coffee — Signing</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --surface-2: #f4f2eb;
+    --ink: #1a1a1a;
+    --ink-2: #5f5e5a;
+    --ink-3: #888780;
+    --border: rgba(0,0,0,0.08);
+    --border-2: rgba(0,0,0,0.15);
+    --accent: #185FA5;
+    --accent-bg: #E6F1FB;
+    --success: #0F6E56;
+    --success-bg: #E1F5EE;
+    --warn: #854F0B;
+    --warn-bg: #FAEEDA;
+    --danger: #A32D2D;
+    --danger-bg: #FCEBEB;
+    --variance: #993C1D;
+    --variance-bg: #FAECE7;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  .app { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+  /* HEADER */
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+  .header .sub { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* BUTTONS */
+  .btn {
+    background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius);
+    padding: 6px 12px; font-size: 12px; font-family: var(--font); cursor: pointer;
+    color: var(--ink); transition: all 0.15s;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn:disabled:hover { background: var(--surface); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn-primary:hover { background: #0C447C; }
+  .btn-success { background: var(--success); border-color: var(--success); color: white; }
+  .btn-success:hover { background: #0A5544; }
+  .btn-sm { padding: 4px 8px; font-size: 11px; }
+  .btn-gen {
+    background: var(--accent-bg); border: 1px solid var(--accent); color: var(--accent);
+    border-radius: var(--radius); padding: 4px 10px; font-size: 11px; font-family: var(--font);
+    font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .btn-gen:hover { background: #d6e8f8; }
+
+  /* STATS */
+  .totals {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 14px 16px;
+  }
+  .stat .lbl { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; font-weight: 500; }
+  .stat .val { font-size: 22px; font-weight: 500; color: var(--ink); }
+  .stat .delta { font-size: 11px; color: var(--ink-2); margin-top: 4px; }
+
+  /* NAV */
+  .nav {
+    display: flex; gap: 4px; margin-bottom: 16px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 6px 12px; font-size: 12px; cursor: pointer; border-radius: var(--radius);
+    color: var(--ink-2); transition: all 0.15s; white-space: nowrap; background: transparent;
+    border: 1px solid transparent; font-family: var(--font);
+  }
+  .nav-tab:hover { background: var(--surface-2); color: var(--ink); }
+  .nav-tab.active { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+
+  /* PAGE HEADER */
+  .page-header { margin-bottom: 16px; }
+  .page-header h2 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .page-header .meta { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); margin-top: 8px; flex-wrap: wrap; }
+  .page-header .meta span strong { color: var(--ink); font-weight: 500; }
+  .desc {
+    background: var(--surface); border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px;
+    margin-bottom: 20px; font-size: 13px; color: var(--ink-2);
+  }
+
+  /* PHASE BADGE */
+  .phase-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500;
+  }
+  .phase-charter { background: #EEEDFE; color: #3C3489; }
+  .phase-shares { background: #E1F5EE; color: #0F6E56; }
+  .phase-banking { background: #E6F1FB; color: #185FA5; }
+  .phase-securities { background: #FAEEDA; color: #854F0B; }
+  .phase-coming { background: var(--surface-2); color: var(--ink-3); }
+
+  /* SIGNING TASKS */
+  .signing-list {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    overflow: hidden; margin-bottom: 16px;
+  }
+  .signing-row { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .signing-row:last-child { border-bottom: none; }
+
+  /* COLLAPSED HEADER */
+  .sr-head {
+    display: grid; grid-template-columns: 24px 1fr auto 160px; gap: 12px;
+    padding: 12px 16px; align-items: center; cursor: pointer;
+  }
+  .sr-head:hover { background: var(--surface-2); }
+  .sr-head .check {
+    width: 18px; height: 18px; border: 1.5px solid var(--border-2); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; background: var(--surface); flex-shrink: 0;
+  }
+  .sr-head .check.checked { background: var(--success); border-color: var(--success); color: white; }
+  .sr-head .check.checked::after { content: "✓"; font-size: 12px; }
+  .sr-head .check.partial { background: var(--warn-bg); border-color: var(--warn); }
+  .sr-head .check.partial::after { content: "◐"; color: var(--warn); font-size: 12px; }
+  .sr-head .info { min-width: 0; }
+  .sr-head .title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .sr-head .meta { font-size: 11px; color: var(--ink-3); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .pill {
+    background: var(--surface-2); padding: 1px 6px; border-radius: 3px; font-size: 10px;
+  }
+  .pill.gen { background: var(--accent-bg); color: var(--accent); }
+  .pill.success { background: var(--success-bg); color: var(--success); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.danger { background: var(--danger-bg); color: var(--danger); }
+  .pill.notes { background: #EEEDFE; color: #3C3489; cursor: help; }
+
+  /* status dot */
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .status-dot.pending { background: var(--ink-3); }
+  .status-dot.sent { background: var(--warn); }
+  .status-dot.delivered { background: var(--accent); }
+  .status-dot.signed { background: var(--success); }
+  .status-dot.declined { background: var(--danger); }
+
+  .sr-toggle { font-size: 11px; color: var(--ink-3); padding: 4px 8px; }
+  .sr-toggle .chev { transition: transform 0.2s; display: inline-block; }
+  .sr-row.expanded .sr-toggle .chev { transform: rotate(180deg); }
+
+  /* EXPANDED BODY */
+  .sr-body {
+    display: none; padding: 16px 20px 20px; background: var(--surface-2);
+    border-top: 1px solid var(--border);
+  }
+  .signing-row.expanded .sr-body { display: block; }
+  .body-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .body-section { min-width: 0; }
+  .body-section h4 {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-3); font-weight: 500; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  /* UPLOAD */
+  .upload-zone {
+    background: var(--surface); border: 1.5px dashed var(--border-2);
+    border-radius: var(--radius); padding: 20px; text-align: center;
+    transition: all 0.15s; cursor: pointer;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .upload-zone.dragover { border-color: var(--accent); background: var(--accent-bg); }
+  .upload-zone .icon { font-size: 20px; color: var(--ink-3); }
+  .upload-zone .main { font-size: 13px; margin-top: 6px; color: var(--ink-2); }
+  .upload-zone .hint { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .upload-zone.has-file { padding: 12px 16px; text-align: left; background: var(--success-bg); border-color: var(--success); border-style: solid; }
+  .upload-zone.has-file .file-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .upload-zone.has-file .file-info { flex: 1; min-width: 0; }
+  .upload-zone.has-file .file-name {
+    font-size: 12px; font-weight: 500; color: var(--success); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .upload-zone.has-file .file-meta { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+
+  /* NOTES */
+  .notes-area {
+    width: 100%; min-height: 70px; padding: 8px 10px; font-size: 12px;
+    border: 1px solid var(--border-2); border-radius: var(--radius);
+    background: var(--surface); font-family: var(--font); color: var(--ink);
+    resize: vertical; line-height: 1.4;
+  }
+  .notes-area:focus { outline: none; border-color: var(--accent); }
+
+  /* SIGNATORIES */
+  .sigs {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .sig-row {
+    display: grid; grid-template-columns: 36px 1fr auto auto auto; gap: 8px;
+    padding: 10px 12px; border-bottom: 1px solid var(--border); align-items: center;
+  }
+  .sig-row:last-child { border-bottom: none; }
+  .sig-row.signed { background: var(--success-bg); }
+  .sig-row.declined { background: var(--danger-bg); }
+  .sig-row input.order {
+    width: 36px; padding: 3px 4px; font-size: 11px; text-align: center;
+    border: 1px solid var(--border-2); border-radius: 4px; background: var(--surface);
+    font-family: var(--font); color: var(--ink);
+  }
+  .sig-row .sig-info { min-width: 0; }
+  .sig-row .sig-name { font-size: 12px; font-weight: 500; }
+  .sig-row .sig-sub { font-size: 11px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sig-row .sig-anchor {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 10px;
+    color: var(--accent); background: var(--accent-bg); padding: 1px 5px; border-radius: 3px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .sig-row .sig-anchor:hover { background: #d6e8f8; }
+  .sig-row .sig-status { font-size: 10px; color: var(--ink-2); }
+  .sig-row .sig-remove {
+    background: transparent; border: none; color: var(--ink-3); font-size: 16px;
+    cursor: pointer; padding: 2px 6px; line-height: 1; border-radius: 4px;
+  }
+  .sig-row .sig-remove:hover { background: var(--danger-bg); color: var(--danger); }
+  .sig-help { font-size: 10px; color: var(--ink-3); margin-top: 6px; font-style: italic; }
+
+  /* ADD SIGNATORY FORM */
+  .add-sig-form {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px; margin-top: 8px;
+  }
+  .add-sig-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .add-sig-form input {
+    width: 100%; padding: 5px 8px; font-size: 12px; border: 1px solid var(--border-2);
+    border-radius: 4px; background: var(--surface); font-family: var(--font); color: var(--ink);
+  }
+  .add-sig-form input:focus { outline: none; border-color: var(--accent); }
+  .add-sig-form label { font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; display: block; font-weight: 500; }
+  .add-sig-form .actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 8px; }
+  .add-sig-form .save-reg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-2); margin-right: auto; }
+
+  /* ACTION BAR */
+  .action-bar {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .action-bar .info {
+    margin-left: auto; font-size: 11px; color: var(--ink-3);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  /* MODAL (signin) */
+  #auth-screen {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg); display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 32px; width: 360px;
+  }
+  .auth-card h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .auth-card .sub { font-size: 12px; color: var(--ink-3); margin-bottom: 20px; }
+  .auth-card input {
+    width: 100%; padding: 8px 10px; font-size: 13px; border: 1px solid var(--border-2);
+    border-radius: var(--radius); background: var(--surface); font-family: var(--font); color: var(--ink);
+  }
+  .auth-card label {
+    display: block; font-size: 11px; color: var(--ink-2); text-transform: uppercase;
+    letter-spacing: 0.04em; margin-bottom: 4px;
+  }
+
+  /* CONFIRM MODAL */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4); align-items: center; justify-content: center; z-index: 200;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius-lg);
+    max-width: 540px; width: 90%; max-height: 80vh; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .modal-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-header h3 { font-size: 14px; font-weight: 500; }
+  .modal-body { padding: 16px 18px; overflow-y: auto; font-size: 13px; color: var(--ink-2); }
+  .modal-body pre {
+    background: var(--surface-2); padding: 10px 12px; border-radius: var(--radius);
+    font-size: 11px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow-y: auto;
+    color: var(--ink); margin-top: 8px;
+  }
+  .modal-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: white; padding: 8px 16px; border-radius: var(--radius);
+    font-size: 12px; opacity: 0; transition: opacity 0.2s; z-index: 300; pointer-events: none;
+    max-width: 80vw;
+  }
+  .toast.show { opacity: 1; }
+  .toast.error { background: var(--danger); }
+  .toast.success { background: var(--success); }
+
+  /* CONSOLIDATED VIEW (empty state) */
+  .empty {
+    text-align: center; padding: 40px 20px; color: var(--ink-3); font-size: 13px;
+  }
+
+  /* RECIPIENT REGISTRY PANEL */
+  .registry-panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 16px 20px; margin-bottom: 16px;
+  }
+
+  /* ROLE BADGE */
+  .role-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500;
+    margin-right: 4px;
+  }
+  .role-badge.admin { background: var(--accent-bg); color: var(--accent); }
+  .role-badge.viewer { background: var(--warn-bg); color: var(--warn); }
+
+  /* EYE TOGGLE (notes visibility) */
+  .notes-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .eye-toggle {
+    background: transparent; border: 1px solid var(--border-2); border-radius: 4px;
+    padding: 3px 8px; cursor: pointer; font-size: 11px; color: var(--ink-2);
+    font-family: var(--font); transition: all 0.15s;
+  }
+  .eye-toggle:hover { background: var(--surface); }
+  .eye-toggle.visible { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .eye-toggle.hidden  { background: var(--surface-2); border-color: var(--border-2); color: var(--ink-3); }
+
+  /* EXPECTED SIGNATORIES HINT */
+  .expected-sigs {
+    background: var(--accent-bg); border: 1px solid var(--accent);
+    border-radius: var(--radius); padding: 10px 12px; margin-bottom: 8px;
+    font-size: 12px; color: var(--ink);
+  }
+  .expected-sigs strong { color: var(--accent); }
+  .expected-sigs .label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); font-weight: 500; display: block; margin-bottom: 4px;
+  }
+
+  /* VIEWER MODE — visual hint that buttons are read-only */
+  .signing-row.viewer .btn:not([data-check]):not([data-download]):not(.btn-sm) {
+    /* admin actions get visually muted in viewer mode */
+  }
+  .registry-panel h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .registry-panel .sub { font-size: 12px; color: var(--ink-3); margin-bottom: 14px; }
+  .registry-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+  }
+  .registry-table th {
+    text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-3); font-weight: 500; padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .registry-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .registry-table tr:last-child td { border-bottom: none; }
+  .registry-table input {
+    width: 100%; padding: 4px 6px; font-size: 12px; border: 1px solid transparent;
+    border-radius: 4px; background: transparent; font-family: var(--font); color: var(--ink);
+  }
+  .registry-table input:hover { border-color: var(--border-2); background: var(--surface); }
+  .registry-table input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .registry-table .core-badge { background: var(--accent-bg); color: var(--accent); padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- ===== AUTH ===== -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <h2>Drop Shot Coffee — Signing</h2>
+    <div class="sub">Dashboard 2 · sign in with your DSC-Admin account</div>
+    <div style="margin-bottom:12px;">
+      <label>Email</label>
+      <input id="auth-email" type="email" autocomplete="email">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label>Password</label>
+      <input id="auth-password" type="password" autocomplete="current-password">
+    </div>
+    <button onclick="signIn()" class="btn btn-primary" style="width:100%; padding:8px 12px; font-size:13px;">Sign in</button>
+    <div id="auth-err" style="display:none; color:var(--danger); background:var(--danger-bg); padding:8px 10px; border-radius:var(--radius); font-size:12px; margin-top:12px;"></div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app" style="display:none;">
+
+<div class="header">
+  <div>
+    <h1>Drop Shot Coffee — Signing</h1>
+    <div class="sub">Dashboard 2 · DocuSign workflow for pre-wire documents</div>
+  </div>
+  <div class="header-actions">
+    <span id="role-badge" class="role-badge"></span>
+    <span id="user-email" style="font-size:11px; color:var(--ink-3); margin-right:4px;"></span>
+    <button class="btn btn-sm" onclick="window.open('https://drop-shot-coffee.github.io/PreWire-Readiness-Tracker/','_blank')">↗ Dashboard 1</button>
+    <button class="btn btn-sm" onclick="signOut()">Sign out</button>
+  </div>
+</div>
+
+<div class="totals">
+  <div class="stat">
+    <div class="lbl">Tasks signed</div>
+    <div class="val" id="stat-signed">0</div>
+    <div class="delta" id="stat-signed-delta">of 0 total</div>
+  </div>
+  <div class="stat">
+    <div class="lbl">In flight</div>
+    <div class="val" id="stat-inflight">0</div>
+    <div class="delta" id="stat-inflight-delta">envelopes awaiting signatures</div>
+  </div>
+  <div class="stat">
+    <div class="lbl">Ready to send</div>
+    <div class="val" id="stat-ready">0</div>
+    <div class="delta" id="stat-ready-delta">uploaded, signatories set</div>
+  </div>
+  <div class="stat">
+    <div class="lbl">Awaiting upload</div>
+    <div class="val" id="stat-pending">0</div>
+    <div class="delta" id="stat-pending-delta">documents not yet uploaded</div>
+  </div>
+</div>
+
+<div class="nav" id="nav"></div>
+
+<div id="pages"></div>
+
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Confirm</h3>
+      <button class="btn btn-sm" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://iwufnpzlwxzzedwcrjrk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_suHnnWiR60uSP_bKx9V_Yg_GJoCzddq";
+const supa = createClient(SUPABASE_URL, SUPABASE_KEY);
+window.supa = supa;
+
+/* ============ STATE ============ */
+let PHASES = [];      // from prewire_phases
+let SUBTASKS = [];    // from prewire_subtasks (with doc_name/doc_prompt)
+let TASKS = {};       // subtask_id -> signing_tasks row (may be undefined)
+let SIGS = {};        // subtask_id -> [signatory rows]
+let REGISTRY = [];    // recipient_registry rows
+let ROLE = "admin";   // 'admin' | 'karim' | 'hwvc' — set on sign-in
+let ROLE_DISPLAY_NAME = ""; // human-readable name for header
+let activePage = 0;   // 0 = overview, 1..n = phases, last = registry
+let expanded = new Set();  // subtask_ids currently expanded
+
+const IS_ADMIN = () => ROLE === "admin";
+const IS_VIEWER = () => !IS_ADMIN();
+
+const PHASE_STYLES = {
+  charter: { label: "Charter", cls: "phase-charter" },
+  shares: { label: "Shares", cls: "phase-shares" },
+  banking: { label: "Banking", cls: "phase-banking" },
+  securities: { label: "Securities", cls: "phase-securities" },
+  coming: { label: "Coming", cls: "phase-coming" }
+};
+
+/* ============ TOAST ============ */
+function toast(msg, type = "") {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast show " + type;
+  setTimeout(() => { el.className = "toast " + type; }, 3000);
+}
+window.toast = toast;
+
+/* ============ AUTH ============ */
+window.signIn = async function() {
+  const email = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const errEl = document.getElementById("auth-err");
+  errEl.style.display = "none";
+  const { data, error } = await supa.auth.signInWithPassword({ email, password });
+  if (error) { errEl.textContent = error.message; errEl.style.display = "block"; return; }
+  await bootApp(data.user);
+};
+window.signOut = async function() {
+  await supa.auth.signOut();
+  document.getElementById("app").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+};
+
+async function bootApp(user) {
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("user-email").textContent = user.email;
+  try {
+    // Look up role first
+    const { data: roleRow, error: roleErr } = await supa
+      .from("user_roles")
+      .select("role, display_name")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (roleErr) throw roleErr;
+    if (!roleRow) {
+      // No role assigned — sign them out, show error on auth screen
+      await supa.auth.signOut();
+      document.getElementById("app").style.display = "none";
+      document.getElementById("auth-screen").style.display = "flex";
+      const errEl = document.getElementById("auth-err");
+      errEl.textContent = "No role assigned to this account. Please contact Tarek.";
+      errEl.style.display = "block";
+      return;
+    }
+    ROLE = roleRow.role;
+    ROLE_DISPLAY_NAME = roleRow.display_name || user.email;
+    // Reflect role in header
+    const badgeEl = document.getElementById("role-badge");
+    if (badgeEl) {
+      badgeEl.textContent = ROLE === "admin" ? "Admin" : `Viewer (${ROLE.toUpperCase()})`;
+      badgeEl.className = ROLE === "admin" ? "role-badge admin" : "role-badge viewer";
+    }
+    await loadAll();
+    render();
+  } catch (err) {
+    console.error(err);
+    toast("Load failed: " + (err.message || err), "error");
+  }
+}
+
+async function init() {
+  const { data } = await supa.auth.getSession();
+  if (data.session) await bootApp(data.session.user);
+}
+init();
+
+/* ============ LOAD ============ */
+async function loadAll() {
+  const [phRes, stRes, tkRes, sgRes, rgRes] = await Promise.all([
+    supa.from("prewire_phases").select("*").order("ord"),
+    supa.from("prewire_subtasks").select("*").order("ord"),
+    supa.from("signing_tasks").select("*"),
+    supa.from("signing_task_signatories").select("*").order("ord"),
+    supa.from("recipient_registry").select("*").order("is_core", { ascending: false }).order("display_name")
+  ]);
+  for (const r of [phRes, stRes, tkRes, sgRes, rgRes]) {
+    if (r.error) throw r.error;
+  }
+  PHASES = phRes.data.filter(p => !p.coming_soon);
+  SUBTASKS = stRes.data;
+  TASKS = {};
+  for (const t of tkRes.data) TASKS[t.subtask_id] = t;
+  SIGS = {};
+  for (const s of sgRes.data) {
+    if (!SIGS[s.subtask_id]) SIGS[s.subtask_id] = [];
+    SIGS[s.subtask_id].push(s);
+  }
+  REGISTRY = rgRes.data;
+}
+
+/* ============ HELPERS ============ */
+function fmtDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+function fmtDateTime(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+function slugify(s) {
+  return s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+}
+
+// Parse expected signers from doc_prompt — finds the "Signers for this document" section
+// and extracts the bolded names + anchor IDs.
+function expectedSigners(st) {
+  if (!st.doc_prompt) return [];
+  // Look only inside the Signers section to avoid pulling bold-marks elsewhere
+  const sectionMatch = st.doc_prompt.match(/###\s+Signers[^\n]*\n([\s\S]+?)(?:\n###|\n```|$)/);
+  const section = sectionMatch ? sectionMatch[1] : st.doc_prompt;
+  // Match: **Name** [anything across multiple lines] `anchor_id`
+  const re = /\*\*([^*\n]+?)\*\*[\s\S]{0,200}?`([a-z0-9_]+)`/gi;
+  const out = [];
+  const seen = new Set();
+  let m;
+  while ((m = re.exec(section)) !== null) {
+    const name = m[1].trim();
+    const id = m[2].trim();
+    if (seen.has(id)) continue;
+    seen.add(id);
+    out.push({ name, recipient_id: id });
+  }
+  return out;
+}
+
+// Determines whether the current role has a signing role on a given task.
+// Admin always returns true. Karim/HWVC: check expected signers from doc_prompt AND actual signatories.
+function isSignerOnTask(st) {
+  if (ROLE === "admin") return true;
+  const sigs = SIGS[st.id] || [];
+  if (sigs.some(s => s.recipient_id === ROLE)) return true;
+  const expected = expectedSigners(st);
+  if (expected.some(e => e.recipient_id === ROLE)) return true;
+  return false;
+}
+
+// Everyone sees all tasks now — role-based filtering removed
+function visibleSubtasks() {
+  return SUBTASKS;
+}
+
+function subtasksByPhase(phaseId) {
+  return visibleSubtasks().filter(s => s.phase_id === phaseId);
+}
+function taskState(st) {
+  const t = TASKS[st.id];
+  const sigs = SIGS[st.id] || [];
+  if (!t || !t.uploaded_file_path) {
+    return { state: "awaiting_upload", label: "Awaiting upload", pillCls: "" };
+  }
+  if (!t.docusign_envelope_id) {
+    if (sigs.length === 0) return { state: "no_sigs", label: "No signatories", pillCls: "warn" };
+    return { state: "ready", label: "Ready to send", pillCls: "gen" };
+  }
+  if (t.envelope_status === "completed") {
+    return { state: "completed", label: "Completed", pillCls: "success" };
+  }
+  if (t.envelope_status === "declined" || t.envelope_status === "voided") {
+    return { state: "declined", label: t.envelope_status, pillCls: "danger" };
+  }
+  return { state: "sent", label: "In flight", pillCls: "warn" };
+}
+function isDone(st) {
+  return st.done === true;
+}
+
+/* ============ RENDER ROOT ============ */
+function render() {
+  renderStats();
+  renderNav();
+  renderPage();
+}
+
+function renderStats() {
+  const tasksWithDocs = visibleSubtasks().filter(s => s.doc_name);
+  const total = tasksWithDocs.length;
+  let signed = 0, inflight = 0, ready = 0, pending = 0;
+  for (const st of tasksWithDocs) {
+    const ts = taskState(st);
+    if (ts.state === "completed" || isDone(st)) signed++;
+    else if (ts.state === "sent") inflight++;
+    else if (ts.state === "ready") ready++;
+    else pending++;
+  }
+  document.getElementById("stat-signed").textContent = signed;
+  document.getElementById("stat-signed-delta").textContent = `of ${total} total`;
+  document.getElementById("stat-inflight").textContent = inflight;
+  document.getElementById("stat-ready").textContent = ready;
+  document.getElementById("stat-pending").textContent = pending;
+}
+
+function renderNav() {
+  const nav = document.getElementById("nav");
+  const tabs = [`<button class="nav-tab ${activePage === 0 ? "active" : ""}" data-page="0">Overview</button>`];
+  PHASES.forEach((p, i) => {
+    tabs.push(`<button class="nav-tab ${activePage === i + 1 ? "active" : ""}" data-page="${i + 1}">${p.symbol || ""} ${p.title}</button>`);
+  });
+  const regIdx = PHASES.length + 1;
+  if (IS_ADMIN()) {
+    tabs.push(`<button class="nav-tab ${activePage === regIdx ? "active" : ""}" data-page="${regIdx}">👥 Recipients</button>`);
+  }
+  nav.innerHTML = tabs.join("");
+  nav.querySelectorAll(".nav-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activePage = parseInt(btn.dataset.page);
+      expanded.clear();
+      render();
+    });
+  });
+}
+
+function renderPage() {
+  const root = document.getElementById("pages");
+  if (activePage === 0) {
+    root.innerHTML = renderOverview();
+  } else if (activePage === PHASES.length + 1) {
+    root.innerHTML = renderRegistry();
+    attachRegistryListeners();
+  } else {
+    const phase = PHASES[activePage - 1];
+    root.innerHTML = renderPhase(phase);
+    attachPhaseListeners(phase);
+  }
+}
+
+/* ============ OVERVIEW ============ */
+function renderOverview() {
+  const tasks = visibleSubtasks().filter(s => s.doc_name).sort((a, b) => a.ord - b.ord);
+  let html = `
+    <div class="page-header">
+      <h2>📋 Overview — all signing tasks</h2>
+      <div class="meta">
+        <span><strong>Source:</strong> Dashboard 1 (Pre-Wire Readiness)</span>
+        <span><strong>Showing:</strong> ${tasks.length} sub-tasks with documents</span>
+      </div>
+    </div>
+    <div class="desc">
+      ${IS_ADMIN()
+        ? "Each row below represents a document that needs to be signed. Click a task to expand: upload the generated document, set signatories, send via DocuSign, track status. Completion here automatically marks the corresponding task complete in Dashboard 1."
+        : "Read-only view of the full pre-wire signing pipeline. Expand any row to see signatories and status. Check Status and Download Signed buttons are enabled on documents where you're a signer."
+      }
+    </div>
+  `;
+  if (tasks.length === 0) {
+    html += `<div class="signing-list"><div class="empty">No signing tasks yet.</div></div>`;
+    return html;
+  }
+  html += `<div class="signing-list">`;
+  for (const st of tasks) {
+    html += renderRow(st, /*showPhase=*/true);
+  }
+  html += `</div>`;
+  return html;
+}
+
+/* ============ PHASE PAGE ============ */
+function renderPhase(phase) {
+  const subs = subtasksByPhase(phase.id).filter(s => s.doc_name);
+  const phaseStyle = PHASE_STYLES[phase.phase_group] || PHASE_STYLES.coming;
+  let html = `
+    <div class="page-header">
+      <h2>${phase.symbol || ""} ${phase.title}</h2>
+      <div class="meta">
+        <span><strong>Phase:</strong> <span class="phase-badge ${phaseStyle.cls}">${phaseStyle.label}</span></span>
+        <span><strong>Owner:</strong> ${phase.owner || "—"}</span>
+        <span><strong>Documents:</strong> ${subs.length}</span>
+      </div>
+    </div>
+  `;
+  if (phase.description) html += `<div class="desc">${phase.description}</div>`;
+  if (subs.length === 0) {
+    html += `<div class="signing-list"><div class="empty">No documents in this phase.</div></div>`;
+    return html;
+  }
+  html += `<div class="signing-list">`;
+  for (const st of subs) html += renderRow(st, /*showPhase=*/false);
+  html += `</div>`;
+  return html;
+}
+
+/* ============ ROW ============ */
+function renderRow(st, showPhase) {
+  const t = TASKS[st.id];
+  const sigs = SIGS[st.id] || [];
+  const ts = taskState(st);
+  const isExp = expanded.has(st.id);
+  const done = isDone(st);
+  const checkCls = done ? "checked" : (ts.state === "sent" ? "partial" : "");
+
+  const phase = PHASES.find(p => p.id === st.phase_id);
+  const phaseStyle = phase ? (PHASE_STYLES[phase.phase_group] || PHASE_STYLES.coming) : PHASE_STYLES.coming;
+
+  // Status indicator
+  let statusInfo = "";
+  if (ts.state === "sent" && t) {
+    const signedCount = sigs.filter(s => s.status === "signed").length;
+    statusInfo = `<span class="pill warn">${signedCount}/${sigs.length} signed</span>`;
+  } else if (ts.state === "completed") {
+    statusInfo = `<span class="pill success">✓ All signed</span>`;
+  } else if (ts.state === "ready") {
+    statusInfo = `<span class="pill gen">Ready · ${sigs.length} signer${sigs.length !== 1 ? "s" : ""}</span>`;
+  } else {
+    statusInfo = `<span class="pill">${ts.label}</span>`;
+  }
+
+  let html = `<div class="signing-row ${isExp ? "expanded" : ""}" data-st="${st.id}">`;
+  html += `<div class="sr-head" data-toggle="${st.id}">
+    <div class="check ${checkCls}"></div>
+    <div class="info">
+      <div class="title">${st.id} · ${st.title.replace(/^Draft\s+/i, "Sign ").replace(/^Generate\s+/i, "Sign ")}</div>
+      <div class="meta">
+        ${showPhase ? `<span class="phase-badge ${phaseStyle.cls}">${phaseStyle.label}</span>` : ""}
+        ${st.doc_name ? `<span class="pill gen">📄 ${st.doc_name}</span>` : ""}
+        ${statusInfo}
+        ${t && t.notes ? `<span class="pill notes" title="${escapeAttr(t.notes).slice(0, 200)}">📝 note</span>` : ""}
+        ${t && t.docusign_envelope_id ? `<span class="pill">env ${t.docusign_envelope_id.slice(0, 8)}…</span>` : ""}
+      </div>
+    </div>
+    <div></div>
+    <div class="sr-toggle">${isExp ? "Collapse" : "Expand"} <span class="chev">▾</span></div>
+  </div>`;
+  html += `<div class="sr-body">${renderBody(st, t, sigs)}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function escapeAttr(s) {
+  return (s || "").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function escapeHtml(s) {
+  return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* ============ ROW BODY ============ */
+function renderBody(st, t, sigs) {
+  const hasFile = t && t.uploaded_file_path;
+  const hasEnvelope = t && t.docusign_envelope_id;
+  const completed = t && t.envelope_status === "completed";
+  const notesVisible = t && t.notes_visible === true;
+  const showNotesToViewer = notesVisible || IS_ADMIN();
+
+  // LEFT: Upload + Notes
+  let uploadHtml;
+  if (hasFile) {
+    uploadHtml = renderUploadedFile(st, t);
+  } else if (IS_ADMIN()) {
+    uploadHtml = renderUploadZone(st);
+  } else {
+    uploadHtml = `<div class="upload-zone" style="cursor: default; opacity: 0.6;">
+      <div class="icon">⏳</div>
+      <div class="main">Awaiting document upload</div>
+      <div class="hint">Tarek will upload the document once it's ready</div>
+    </div>`;
+  }
+
+  // Notes block — admin always sees; viewers only see if notes_visible
+  let notesHtml = "";
+  if (IS_ADMIN()) {
+    notesHtml = `
+      <div class="notes-header" style="margin-top: 14px;">
+        <h4 style="margin: 0; flex: 1;">📝 Notes (signing context)</h4>
+        <button class="eye-toggle ${notesVisible ? "visible" : "hidden"}" data-toggle-notes="${st.id}"
+                title="${notesVisible ? "Visible to Karim/HWVC — click to hide" : "Hidden from Karim/HWVC — click to make visible"}">
+          ${notesVisible ? "👁 Visible" : "🚫 Hidden"}
+        </button>
+      </div>
+      <textarea class="notes-area" data-notes="${st.id}" placeholder="e.g., Reviewed with Karim May 24, confirmed all clauses">${escapeHtml(t && t.notes || "")}</textarea>
+    `;
+  } else if (showNotesToViewer && t && t.notes) {
+    notesHtml = `
+      <h4 style="margin-top: 14px;">📝 Notes from Tarek</h4>
+      <div class="notes-area" style="background: var(--surface); white-space: pre-wrap;">${escapeHtml(t.notes)}</div>
+    `;
+  }
+
+  let leftHtml = `
+    <div class="body-section">
+      <h4>Document</h4>
+      ${uploadHtml}
+      ${notesHtml}
+    </div>
+  `;
+
+  // RIGHT: Signatories
+  const showAddSig = IS_ADMIN() && !hasEnvelope;
+  let rightHtml = `
+    <div class="body-section">
+      <h4>Signatories ${showAddSig ? `<button class="btn btn-sm" data-add-sig="${st.id}">+ Add</button>` : ""}</h4>
+      ${renderSigsList(st, sigs, hasEnvelope)}
+      ${IS_ADMIN() && !hasEnvelope ? '<div class="sig-help">Equal order numbers = parallel signing. Ascending = sequential.</div>' : ""}
+      <div id="addsig-form-${st.id}" style="display:none;"></div>
+    </div>
+  `;
+
+  // ACTION BAR
+  const isSigner = isSignerOnTask(st);
+  const canSend = IS_ADMIN() && hasFile && sigs.length > 0 && !hasEnvelope;
+  const canCheck = isSigner && hasEnvelope && !completed;
+  const canFetch = IS_ADMIN() && completed && t && !t.signed_file_path;
+  const canDownload = isSigner && t && t.signed_file_path;
+
+  let actionsHtml = `
+    <div class="action-bar">
+      ${IS_ADMIN() ? `<button class="btn btn-primary" data-send="${st.id}" ${canSend ? "" : "disabled"}>📤 Send envelope</button>` : ""}
+      <button class="btn" data-check="${st.id}" ${canCheck ? "" : "disabled"}>🔄 Check status</button>
+      ${IS_ADMIN() ? `<button class="btn" data-fetch="${st.id}" ${canFetch ? "" : "disabled"}>⬇ Fetch signed PDF</button>` : ""}
+      ${canDownload ? `<button class="btn btn-success" data-download="${st.id}">⬇ Download signed</button>` : ""}
+      <span class="info">${t && t.docusign_envelope_id ? `Envelope: ${t.docusign_envelope_id}` : "Envelope: not yet created"}</span>
+    </div>
+  `;
+
+  return `<div class="body-grid">${leftHtml}${rightHtml}</div>${actionsHtml}`;
+}
+
+function renderUploadZone(st) {
+  return `
+    <div class="upload-zone" data-upload="${st.id}">
+      <div class="icon">📤</div>
+      <div class="main">Drop file or click to upload</div>
+      <div class="hint">PDF or DOCX, max 50MB · must contain anchor strings</div>
+      <input type="file" accept=".pdf,.docx" data-upload-input="${st.id}" style="display:none;">
+    </div>
+  `;
+}
+
+function renderUploadedFile(st, t) {
+  const hasEnvelope = t && t.docusign_envelope_id;
+  const adminActions = IS_ADMIN() ? `
+    <button class="btn btn-sm" data-replace="${st.id}" ${hasEnvelope ? "disabled" : ""}>Replace</button>
+    <button class="btn btn-sm" data-remove-file="${st.id}" ${hasEnvelope ? "disabled" : ""} style="color: var(--danger); border-color: var(--danger);">Remove</button>
+    <input type="file" accept=".pdf,.docx" data-upload-input="${st.id}" style="display:none;">
+  ` : "";
+  return `
+    <div class="upload-zone has-file">
+      <div class="file-row">
+        <div style="font-size:18px;">📄</div>
+        <div class="file-info">
+          <div class="file-name">${escapeHtml(t.uploaded_file_name)}</div>
+          <div class="file-meta">Uploaded ${fmtDateTime(t.uploaded_at)}</div>
+        </div>
+        ${adminActions}
+      </div>
+    </div>
+  `;
+}
+
+function renderSigsList(st, sigs, envelopeSent) {
+  if (sigs.length === 0) {
+    // Show expected signatories hint parsed from doc_prompt
+    const expected = expectedSigners(st);
+    let hint = "";
+    if (expected.length > 0) {
+      const names = expected.map(e => `<strong>${escapeHtml(e.name)}</strong>`).join(", ");
+      hint = `
+        <div class="expected-sigs">
+          <span class="label">Expected signatories for this document</span>
+          ${names}
+        </div>
+      `;
+    }
+    const emptyMsg = IS_ADMIN()
+      ? "No signatories added yet. Click + Add or use a registry preset below."
+      : "No signatories assigned yet.";
+    return `${hint}<div class="sigs" style="padding: 14px; text-align: center; color: var(--ink-3); font-size: 12px;">${emptyMsg}</div>${IS_ADMIN() ? renderRegistryPresets(st) : ""}`;
+  }
+  const rows = sigs.map(s => {
+    const statusCls = s.status === "signed" ? "signed" : (s.status === "declined" ? "declined" : "");
+    const anchor = `\\sig_${s.recipient_id || slugify(s.display_name)}\\`;
+    const canEdit = IS_ADMIN() && !envelopeSent;
+    return `
+      <div class="sig-row ${statusCls}" data-sig="${s.id}">
+        <input type="number" class="order" value="${s.routing_order}" min="1" data-order="${s.id}" ${canEdit ? "" : "disabled"}>
+        <div class="sig-info">
+          <div class="sig-name">${escapeHtml(s.display_name)} <span class="status-dot ${s.status}"></span></div>
+          <div class="sig-sub">${escapeHtml(s.title || "—")} · ${escapeHtml(s.email)}</div>
+        </div>
+        <span class="sig-anchor" data-anchor="${anchor}" title="Click to copy anchor">${anchor}</span>
+        <span class="sig-status">${s.status}${s.signed_at ? " · " + fmtDate(s.signed_at) : ""}</span>
+        ${IS_ADMIN() ? `<button class="sig-remove" data-remove-sig="${s.id}" ${envelopeSent ? "disabled style='opacity:0.3'" : ""}>×</button>` : '<span></span>'}
+      </div>
+    `;
+  }).join("");
+  return `<div class="sigs">${rows}</div>${envelopeSent || !IS_ADMIN() ? "" : renderRegistryPresets(st)}`;
+}
+
+function renderRegistryPresets(st) {
+  const sigs = SIGS[st.id] || [];
+  const usedIds = new Set(sigs.map(s => s.recipient_id).filter(Boolean));
+  const available = REGISTRY.filter(r => !usedIds.has(r.id));
+  if (available.length === 0) return "";
+  const chips = available.map(r => `
+    <button class="btn btn-sm" data-add-preset="${st.id}|${r.id}" style="margin-right:4px;">+ ${escapeHtml(r.display_name)}${r.is_core ? "" : " (custom)"}</button>
+  `).join("");
+  return `<div style="margin-top:8px; font-size: 11px; color: var(--ink-3);">Quick add: ${chips}</div>`;
+}
+
+/* ============ EVENT WIRING ============ */
+function attachPhaseListeners(_phase) {
+  attachRowListeners();
+}
+
+function attachRowListeners() {
+  // toggle expand
+  document.querySelectorAll("[data-toggle]").forEach(el => {
+    el.addEventListener("click", (e) => {
+      if (e.target.closest("button, input, textarea, .upload-zone, .sig-anchor")) return;
+      const id = el.dataset.toggle;
+      if (expanded.has(id)) expanded.delete(id);
+      else expanded.add(id);
+      renderPage();
+    });
+  });
+
+  // upload zone click
+  document.querySelectorAll("[data-upload]").forEach(zone => {
+    if (!IS_ADMIN()) return;  // viewers: zone is decorative, no upload allowed
+    const id = zone.dataset.upload;
+    const input = document.querySelector(`[data-upload-input="${id}"]`);
+    zone.addEventListener("click", () => input && input.click());
+    zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.classList.add("dragover"); });
+    zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+    zone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      zone.classList.remove("dragover");
+      if (e.dataTransfer.files[0]) handleUpload(id, e.dataTransfer.files[0]);
+    });
+  });
+  document.querySelectorAll("[data-upload-input]").forEach(inp => {
+    inp.addEventListener("change", (e) => {
+      const id = inp.dataset.uploadInput;
+      if (e.target.files[0]) handleUpload(id, e.target.files[0]);
+    });
+  });
+  // replace button → triggers same hidden file input
+  document.querySelectorAll("[data-replace]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.replace;
+      const input = document.querySelector(`[data-upload-input="${id}"]`);
+      if (input) input.click();
+    });
+  });
+
+  // remove uploaded file
+  document.querySelectorAll("[data-remove-file]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeUploadedFile(btn.dataset.removeFile);
+    });
+  });
+
+  // toggle notes visibility
+  document.querySelectorAll("[data-toggle-notes]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleNotesVisibility(btn.dataset.toggleNotes);
+    });
+  });
+
+  // notes
+  document.querySelectorAll("[data-notes]").forEach(ta => {
+    let timer;
+    ta.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => persistNotes(ta.dataset.notes, ta.value), 500);
+    });
+  });
+
+  // add signatory
+  document.querySelectorAll("[data-add-sig]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.addSig;
+      showAddSigForm(id);
+    });
+  });
+  // add preset
+  document.querySelectorAll("[data-add-preset]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const [stId, recId] = btn.dataset.addPreset.split("|");
+      addPresetSig(stId, recId);
+    });
+  });
+  // order change
+  document.querySelectorAll("[data-order]").forEach(inp => {
+    inp.addEventListener("change", () => updateOrder(inp.dataset.order, parseInt(inp.value) || 1));
+  });
+  // remove sig
+  document.querySelectorAll("[data-remove-sig]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeSig(btn.dataset.removeSig);
+    });
+  });
+  // copy anchor
+  document.querySelectorAll(".sig-anchor").forEach(el => {
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      navigator.clipboard.writeText(el.dataset.anchor);
+      toast(`Copied anchor: ${el.dataset.anchor}`, "success");
+    });
+  });
+  // actions
+  document.querySelectorAll("[data-send]").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); confirmSend(btn.dataset.send); });
+  });
+  document.querySelectorAll("[data-check]").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); checkStatus(btn.dataset.check); });
+  });
+  document.querySelectorAll("[data-fetch]").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); fetchSigned(btn.dataset.fetch); });
+  });
+  document.querySelectorAll("[data-download]").forEach(btn => {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); downloadSigned(btn.dataset.download); });
+  });
+}
+
+/* ============ UPLOAD ============ */
+async function handleUpload(stId, file) {
+  if (file.size > 50 * 1024 * 1024) {
+    toast("File too large (max 50MB)", "error");
+    return;
+  }
+  toast("Uploading…");
+  const ext = file.name.split(".").pop().toLowerCase();
+  const path = `uploads/${stId}_${Date.now()}.${ext}`;
+  const { error: upErr } = await supa.storage.from("signing-documents").upload(path, file, { contentType: file.type, upsert: false });
+  if (upErr) {
+    toast("Upload failed: " + upErr.message, "error");
+    return;
+  }
+
+  // Scan PDF/DOCX text for anchor presence (best-effort — only for PDFs we can extract from)
+  // Skip for now and rely on user verification
+
+  // upsert signing_tasks row
+  const existing = TASKS[stId];
+  const row = {
+    subtask_id: stId,
+    uploaded_file_path: path,
+    uploaded_file_name: file.name,
+    uploaded_at: new Date().toISOString()
+  };
+  const { error } = await supa.from("signing_tasks").upsert(row, { onConflict: "subtask_id" });
+  if (error) {
+    toast("DB write failed: " + error.message, "error");
+    return;
+  }
+  TASKS[stId] = { ...(existing || {}), ...row };
+
+  // If no signatories yet and the task has a default, auto-seed Tarek as first signatory
+  if (!SIGS[stId] || SIGS[stId].length === 0) {
+    const tarek = REGISTRY.find(r => r.id === "tarek");
+    if (tarek) await doAddSig(stId, tarek.id, tarek.display_name, tarek.email, tarek.default_title, 1);
+  }
+
+  toast("Uploaded ✓", "success");
+  render();
+}
+
+async function persistNotes(stId, notes) {
+  const existing = TASKS[stId];
+  const row = { subtask_id: stId, notes };
+  const { error } = await supa.from("signing_tasks").upsert(row, { onConflict: "subtask_id" });
+  if (error) { toast("Save failed: " + error.message, "error"); return; }
+  TASKS[stId] = { ...(existing || { subtask_id: stId }), notes };
+  renderStats();
+}
+
+async function removeUploadedFile(stId) {
+  const t = TASKS[stId];
+  if (!t || !t.uploaded_file_path) return;
+  if (t.docusign_envelope_id) { toast("Cannot remove file — envelope already sent", "error"); return; }
+  if (!confirm("Remove the uploaded file? This will also clear any signatory list. This cannot be undone.")) return;
+
+  // Delete from Storage
+  const { error: rmErr } = await supa.storage.from("signing-documents").remove([t.uploaded_file_path]);
+  if (rmErr && !rmErr.message.includes("not found")) {
+    toast("Storage delete failed: " + rmErr.message, "error");
+    return;
+  }
+
+  // Clear upload fields on signing_tasks
+  const { error: dbErr } = await supa.from("signing_tasks").update({
+    uploaded_file_path: null,
+    uploaded_file_name: null,
+    uploaded_at: null
+  }).eq("subtask_id", stId);
+  if (dbErr) { toast("DB update failed: " + dbErr.message, "error"); return; }
+
+  // Also clear any signatories (they were auto-seeded on upload)
+  const { error: sigErr } = await supa.from("signing_task_signatories").delete().eq("subtask_id", stId);
+  if (sigErr) { toast("Signatory cleanup failed: " + sigErr.message, "error"); return; }
+
+  // Update local state
+  TASKS[stId] = { ...t, uploaded_file_path: null, uploaded_file_name: null, uploaded_at: null };
+  SIGS[stId] = [];
+
+  toast("File removed ✓", "success");
+  render();
+}
+
+async function toggleNotesVisibility(stId) {
+  const t = TASKS[stId];
+  const currentlyVisible = t && t.notes_visible === true;
+  const newVal = !currentlyVisible;
+  // Ensure row exists
+  const row = { subtask_id: stId, notes_visible: newVal };
+  const { error } = await supa.from("signing_tasks").upsert(row, { onConflict: "subtask_id" });
+  if (error) { toast("Save failed: " + error.message, "error"); return; }
+  TASKS[stId] = { ...(t || { subtask_id: stId }), notes_visible: newVal };
+  toast(newVal ? "Notes now visible to Karim/HWVC" : "Notes now hidden", "success");
+  render();
+}
+
+/* ============ SIGNATORY MGMT ============ */
+function showAddSigForm(stId) {
+  const wrap = document.getElementById(`addsig-form-${stId}`);
+  if (!wrap) return;
+  wrap.style.display = "block";
+  wrap.innerHTML = `
+    <div class="add-sig-form">
+      <div class="row">
+        <div><label>Name</label><input type="text" id="asf-name-${stId}" placeholder="e.g., Sarah Chen"></div>
+        <div><label>Email</label><input type="email" id="asf-email-${stId}" placeholder="sarah@example.com"></div>
+      </div>
+      <div class="row">
+        <div><label>Title / Designation</label><input type="text" id="asf-title-${stId}" placeholder="e.g., Director"></div>
+        <div><label>Recipient ID (auto)</label><input type="text" id="asf-id-${stId}" placeholder="auto-generated from name"></div>
+      </div>
+      <div class="actions">
+        <label class="save-reg"><input type="checkbox" id="asf-save-${stId}"> Save to registry for future use</label>
+        <button class="btn btn-sm" data-cancel-sig="${stId}">Cancel</button>
+        <button class="btn btn-primary btn-sm" data-confirm-sig="${stId}">Add signatory</button>
+      </div>
+    </div>
+  `;
+  // wire name → auto recipient_id
+  const nameInp = document.getElementById(`asf-name-${stId}`);
+  const idInp = document.getElementById(`asf-id-${stId}`);
+  nameInp.addEventListener("input", () => {
+    if (!idInp.dataset.touched) idInp.value = slugify(nameInp.value);
+  });
+  idInp.addEventListener("input", () => { idInp.dataset.touched = "1"; });
+  document.querySelector(`[data-cancel-sig="${stId}"]`).addEventListener("click", () => { wrap.style.display = "none"; });
+  document.querySelector(`[data-confirm-sig="${stId}"]`).addEventListener("click", () => confirmAddSig(stId));
+  nameInp.focus();
+}
+
+async function confirmAddSig(stId) {
+  const name = document.getElementById(`asf-name-${stId}`).value.trim();
+  const email = document.getElementById(`asf-email-${stId}`).value.trim();
+  const title = document.getElementById(`asf-title-${stId}`).value.trim();
+  let recId = document.getElementById(`asf-id-${stId}`).value.trim() || slugify(name);
+  const saveReg = document.getElementById(`asf-save-${stId}`).checked;
+
+  if (!name || !email) { toast("Name and email required", "error"); return; }
+  if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) { toast("Invalid email", "error"); return; }
+
+  // Ensure recId is unique in registry if saving there
+  if (saveReg) {
+    const exists = REGISTRY.find(r => r.id === recId);
+    if (exists) {
+      let i = 2;
+      while (REGISTRY.find(r => r.id === `${recId}_${i}`)) i++;
+      recId = `${recId}_${i}`;
+    }
+    const { error: regErr } = await supa.from("recipient_registry").insert({
+      id: recId, display_name: name, email, default_title: title || null, is_core: false
+    });
+    if (regErr) { toast("Registry save failed: " + regErr.message, "error"); return; }
+    REGISTRY.push({ id: recId, display_name: name, email, default_title: title, is_core: false });
+  }
+
+  const nextOrder = ((SIGS[stId] || []).reduce((m, s) => Math.max(m, s.routing_order), 0)) + 1;
+  await doAddSig(stId, saveReg ? recId : null, name, email, title || null, nextOrder, /*adhocRecipientId=*/saveReg ? null : recId);
+  document.getElementById(`addsig-form-${stId}`).style.display = "none";
+  render();
+}
+
+async function doAddSig(stId, registryRecipientId, name, email, title, order, adhocRecipientId = null) {
+  const row = {
+    subtask_id: stId,
+    recipient_id: registryRecipientId,  // null if not in registry
+    display_name: name,
+    email,
+    title,
+    routing_order: order,
+    ord: order,
+    status: "pending"
+  };
+  const { data, error } = await supa.from("signing_task_signatories").insert(row).select().single();
+  if (error) { toast("Add failed: " + error.message, "error"); return; }
+  // attach adhoc id for anchor display purposes (not persisted in registry)
+  if (!registryRecipientId && adhocRecipientId) {
+    data.recipient_id = adhocRecipientId; // local only
+  }
+  SIGS[stId] = SIGS[stId] || [];
+  SIGS[stId].push(data);
+}
+
+async function addPresetSig(stId, recId) {
+  const r = REGISTRY.find(x => x.id === recId);
+  if (!r) return;
+  const nextOrder = ((SIGS[stId] || []).reduce((m, s) => Math.max(m, s.routing_order), 0)) + 1;
+  await doAddSig(stId, r.id, r.display_name, r.email, r.default_title, nextOrder);
+  render();
+}
+
+async function updateOrder(sigId, newOrder) {
+  const { error } = await supa.from("signing_task_signatories").update({ routing_order: newOrder, ord: newOrder }).eq("id", sigId);
+  if (error) { toast("Save failed: " + error.message, "error"); return; }
+  for (const stId in SIGS) {
+    const s = SIGS[stId].find(x => x.id === sigId);
+    if (s) { s.routing_order = newOrder; s.ord = newOrder; break; }
+  }
+}
+
+async function removeSig(sigId) {
+  if (!confirm("Remove this signatory?")) return;
+  const { error } = await supa.from("signing_task_signatories").delete().eq("id", sigId);
+  if (error) { toast("Remove failed: " + error.message, "error"); return; }
+  for (const stId in SIGS) {
+    SIGS[stId] = SIGS[stId].filter(s => s.id !== sigId);
+  }
+  render();
+}
+
+/* ============ MODAL ============ */
+function showConfirm(title, bodyHtml, onConfirm) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-body").innerHTML = bodyHtml;
+  const btn = document.getElementById("modal-confirm");
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.addEventListener("click", () => { closeModal(); onConfirm(); });
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal() { document.getElementById("modal").classList.remove("show"); }
+window.closeModal = closeModal;
+
+/* ============ DOCUSIGN ACTIONS ============ */
+async function confirmSend(stId) {
+  const st = SUBTASKS.find(s => s.id === stId);
+  const t = TASKS[stId];
+  const sigs = SIGS[stId] || [];
+  if (!t || !sigs.length) return;
+
+  const orderGroups = {};
+  for (const s of sigs) {
+    orderGroups[s.routing_order] = orderGroups[s.routing_order] || [];
+    orderGroups[s.routing_order].push(s);
+  }
+  const orders = Object.keys(orderGroups).map(Number).sort((a, b) => a - b);
+  const orderDescription = orders.length === 1 ? "All signers sign in parallel." : "Sequential signing: " + orders.map(o => orderGroups[o].map(s => s.display_name).join(" + ")).join(" → ") + ".";
+
+  const sigsList = sigs.map(s => `<li><strong>${escapeHtml(s.display_name)}</strong> (${escapeHtml(s.email)}) — order ${s.routing_order}</li>`).join("");
+  const body = `
+    <p>You're about to send <strong>${escapeHtml(t.uploaded_file_name)}</strong> for signature.</p>
+    <p style="margin-top:10px;"><strong>Signatories:</strong></p>
+    <ul style="margin: 6px 0 10px 18px;">${sigsList}</ul>
+    <p><strong>${orderDescription}</strong></p>
+    <p style="margin-top:10px; color: var(--warn); font-size: 12px;">⚠ Make sure the document contains the anchor strings for each signer. After sending, signatory list cannot be changed.</p>
+  `;
+  showConfirm("Send envelope?", body, () => doSend(stId));
+}
+
+async function doSend(stId) {
+  const st = SUBTASKS.find(s => s.id === stId);
+  const t = TASKS[stId];
+  const sigs = SIGS[stId] || [];
+
+  toast("Preparing envelope…");
+
+  // Download file from storage and convert to base64
+  const { data: blob, error: dlErr } = await supa.storage.from("signing-documents").download(t.uploaded_file_path);
+  if (dlErr) { toast("Storage read failed: " + dlErr.message, "error"); return; }
+  const arrayBuf = await blob.arrayBuffer();
+  const base64 = arrayBufferToBase64(arrayBuf);
+
+  // Build recipients with recipient_id (registry id if present, else slug of name)
+  const recipients = sigs.map(s => ({
+    recipient_id: s.recipient_id || slugify(s.display_name),
+    name: s.display_name,
+    email: s.email,
+    routing_order: s.routing_order
+  }));
+
+  toast("Sending to DocuSign…");
+  const { data, error } = await supa.functions.invoke("docusign-send-envelope", {
+    body: {
+      subtask_id: stId,
+      document_base64: base64,
+      document_name: t.uploaded_file_name,
+      email_subject: `[Drop Shot Coffee] Please sign: ${st.title}`,
+      email_message: "Please review and sign the attached document.",
+      recipients
+    }
+  });
+  if (error) { toast("Send failed: " + error.message, "error"); return; }
+  if (data.error) { toast("DocuSign error: " + (data.details || data.error), "error"); console.error(data); return; }
+
+  // Update signing_tasks
+  const updateRow = {
+    docusign_envelope_id: data.envelope_id,
+    envelope_status: "sent",
+    envelope_sent_at: new Date().toISOString()
+  };
+  await supa.from("signing_tasks").update(updateRow).eq("subtask_id", stId);
+  TASKS[stId] = { ...t, ...updateRow };
+
+  // Update each signatory with docusign_recipient_id + status sent
+  for (const m of (data.recipient_mapping || [])) {
+    const s = sigs.find(x => (x.recipient_id || slugify(x.display_name)) === m.recipient_id);
+    if (s) {
+      await supa.from("signing_task_signatories").update({
+        docusign_recipient_id: m.docusign_recipient_id,
+        status: "sent"
+      }).eq("id", s.id);
+      s.docusign_recipient_id = m.docusign_recipient_id;
+      s.status = "sent";
+    }
+  }
+
+  toast("Envelope sent ✓ Signers will receive email shortly.", "success");
+  render();
+}
+
+async function checkStatus(stId) {
+  const t = TASKS[stId];
+  if (!t || !t.docusign_envelope_id) return;
+  toast("Checking status…");
+  const { data, error } = await supa.functions.invoke("docusign-check-status", {
+    body: { envelope_id: t.docusign_envelope_id }
+  });
+  if (error) { toast("Status check failed: " + error.message, "error"); return; }
+  if (data.error) { toast("DocuSign error: " + (data.details || data.error), "error"); return; }
+
+  const updateRow = {
+    envelope_status: data.status,
+    envelope_completed_at: data.completed_at || null
+  };
+  await supa.from("signing_tasks").update(updateRow).eq("subtask_id", stId);
+  TASKS[stId] = { ...t, ...updateRow };
+
+  // Update each signatory
+  const sigs = SIGS[stId] || [];
+  for (const dsRecip of (data.signers || [])) {
+    const s = sigs.find(x => x.docusign_recipient_id === dsRecip.docusign_recipient_id);
+    if (s) {
+      const newStatus = (dsRecip.status === "completed" || dsRecip.status === "signed") ? "signed" : dsRecip.status;
+      await supa.from("signing_task_signatories").update({
+        status: newStatus,
+        signed_at: dsRecip.signed_at
+      }).eq("id", s.id);
+      s.status = newStatus;
+      s.signed_at = dsRecip.signed_at;
+    }
+  }
+
+  // If completed, auto-mark D1 task done
+  if (data.status === "completed") {
+    await supa.from("prewire_subtasks").update({ done: true, pct: 100 }).eq("id", stId);
+    const st = SUBTASKS.find(s => s.id === stId);
+    if (st) { st.done = true; st.pct = 100; }
+    toast("All signed! ✓ D1 task marked complete. Fetching signed PDF…", "success");
+    await fetchSigned(stId);
+    return;
+  }
+
+  const signedCount = (data.signers || []).filter(s => s.status === "completed" || s.status === "signed").length;
+  toast(`Status: ${data.status} · ${signedCount}/${(data.signers || []).length} signed`, "success");
+  render();
+}
+
+async function fetchSigned(stId) {
+  const t = TASKS[stId];
+  if (!t || !t.docusign_envelope_id) return;
+  toast("Fetching signed PDF…");
+  const { data, error } = await supa.functions.invoke("docusign-fetch-signed", {
+    body: { envelope_id: t.docusign_envelope_id, subtask_id: stId }
+  });
+  if (error) { toast("Fetch failed: " + error.message, "error"); return; }
+  if (data.error) { toast("DocuSign error: " + (data.details || data.error), "error"); return; }
+  TASKS[stId] = { ...t, signed_file_path: data.storage_path, envelope_status: "completed" };
+  toast("Signed PDF ready for download.", "success");
+  render();
+}
+
+async function downloadSigned(stId) {
+  const t = TASKS[stId];
+  if (!t || !t.signed_file_path) return;
+  const { data, error } = await supa.storage.from("signing-documents").createSignedUrl(t.signed_file_path, 300);
+  if (error) { toast("Download URL failed: " + error.message, "error"); return; }
+  window.open(data.signedUrl, "_blank");
+}
+
+/* ============ REGISTRY ============ */
+function renderRegistry() {
+  return `
+    <div class="page-header">
+      <h2>👥 Recipient Registry</h2>
+      <div class="meta">
+        <span>Stable identity layer for DocuSign signing. Core recipients pre-seeded; add others as needed.</span>
+      </div>
+    </div>
+    <div class="registry-panel">
+      <h3>Signers</h3>
+      <div class="sub">Edit name, email, or default title in place. Anchor strings (e.g. \\sig_tarek\\) are auto-derived from each ID.</div>
+      <table class="registry-table">
+        <thead><tr>
+          <th>ID</th><th>Name</th><th>Email</th><th>Default title</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${REGISTRY.map(r => `
+            <tr data-reg="${r.id}">
+              <td><code style="font-size:11px;">${r.id}</code> ${r.is_core ? "<span class='core-badge'>core</span>" : ""}</td>
+              <td><input type="text" data-reg-field="display_name" data-reg-id="${r.id}" value="${escapeAttr(r.display_name)}"></td>
+              <td><input type="email" data-reg-field="email" data-reg-id="${r.id}" value="${escapeAttr(r.email)}"></td>
+              <td><input type="text" data-reg-field="default_title" data-reg-id="${r.id}" value="${escapeAttr(r.default_title || "")}"></td>
+              <td>${r.is_core ? "" : `<button class="btn btn-sm" data-reg-remove="${r.id}">Remove</button>`}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function attachRegistryListeners() {
+  document.querySelectorAll("[data-reg-field]").forEach(inp => {
+    let timer;
+    inp.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const id = inp.dataset.regId;
+        const field = inp.dataset.regField;
+        const value = inp.value;
+        const { error } = await supa.from("recipient_registry").update({ [field]: value }).eq("id", id);
+        if (error) { toast("Save failed: " + error.message, "error"); return; }
+        const r = REGISTRY.find(x => x.id === id);
+        if (r) r[field] = value;
+        toast("Saved", "success");
+      }, 600);
+    });
+  });
+  document.querySelectorAll("[data-reg-remove]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Remove this recipient from the registry?")) return;
+      const id = btn.dataset.regRemove;
+      const { error } = await supa.from("recipient_registry").delete().eq("id", id);
+      if (error) { toast("Remove failed: " + error.message, "error"); return; }
+      REGISTRY = REGISTRY.filter(r => r.id !== id);
+      render();
+    });
+  });
+}
+
+/* ============ UTIL ============ */
+function arrayBufferToBase64(buf) {
+  let binary = "";
+  const bytes = new Uint8Array(buf);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+</script>
+</body>
+</html>
